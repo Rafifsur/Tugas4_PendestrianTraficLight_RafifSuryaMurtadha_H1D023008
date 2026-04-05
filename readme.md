@@ -1,118 +1,133 @@
-# 🚦 Traffic Light 4 Arah - Arduino Uno
+# 🚦 Pedestrian Traffic Light - Arduino Uno
 
 ## Deskripsi
 
-Project ini dibuat untuk mensimulasikan sistem lampu lalu lintas pada persimpangan 4 arah menggunakan Arduino Uno. Tujuan utamanya adalah memahami bagaimana GPIO pada Arduino bisa digunakan untuk mengontrol beberapa LED sekaligus dengan logika tertentu.
+Project ini dibuat untuk mensimulasikan sistem pedestrian traffic light menggunakan Arduino Uno dengan memanfaatkan konsep interrupt. Sistem ini menggambarkan kondisi lampu lalu lintas pada satu jalur kendaraan yang dilengkapi dengan dua sisi penyeberangan.
 
-Pada simulasi ini terdapat 4 arah:
+Lampu kendaraan terdiri dari tiga warna:
+- Merah  
+- Kuning  
+- Hijau  
 
-* Utara
-* Timur
-* Selatan
-* Barat
+Sedangkan untuk pedestrian terdiri dari:
+- Merah  
+- Hijau  
 
-Masing-masing arah memiliki 3 lampu:
-
-* Merah
-* Kuning
-* Hijau
-
-Lampu akan menyala secara bergantian mengikuti arah jarum jam dan berjalan terus menerus (loop).
+Pada kondisi normal, kendaraan berjalan (lampu hijau) dan pedestrian berhenti. Ketika tombol ditekan, sistem akan menghentikan kendaraan dan memberikan kesempatan bagi pejalan kaki untuk menyeberang.
 
 ---
 
-## ⚙️ Tools yang Digunakan
+## Tools yang Digunakan
 
-* Arduino Uno
-* Arduino IDE
-* Tinkercad (untuk simulasi rangkaian)
-
----
-
-## 🔄 Cara Kerja Sistem
-
-Secara sederhana, alurnya seperti ini:
-
-* Awal sistem: semua lampu merah
-* Salah satu arah akan aktif (hijau menyala 5 detik)
-* Setelah itu lampu kuning berkedip 3 kali
-* Lalu kembali ke merah
-* Sistem pindah ke arah berikutnya
-
-Urutannya:
-
-```
-Utara → Timur → Selatan → Barat → ulang lagi
-```
-
-Yang penting di sini:
-
-* Tidak ada lebih dari satu lampu hijau yang menyala
-* Sistem berjalan terus tanpa berhenti
+- Arduino Uno  
+- Arduino IDE  
+- Tinkercad (simulasi rangkaian)
 
 ---
 
-## 🔌 Mapping Pin
+## Cara Kerja Sistem
 
-| Arah    | Merah | Kuning | Hijau |
-| ------- | ----- | ------ | ----- |
-| Utara   | 2     | 3      | 4     |
-| Timur   | 5     | 6      | 7     |
-| Selatan | 8     | 9      | 10    |
-| Barat   | 11    | 12     | 13    |
+Alur kerja sistem secara sederhana adalah sebagai berikut:
+
+- Kondisi awal: kendaraan hijau, pedestrian merah  
+- Ketika tombol ditekan:
+  - Kendaraan berubah menjadi merah  
+  - Pedestrian berubah menjadi hijau  
+- Setelah beberapa detik:
+  - Pedestrian kembali merah  
+  - Kendaraan masuk fase kuning (kedip 3 kali)  
+- Sistem kembali ke kondisi awal  
+
+**Catatan:**
+- Kedua sisi pedestrian menyala bersamaan  
+- Sistem berjalan terus menerus (looping)  
 
 ---
 
-## 💻 Cuplikan Program
+## Mapping Pin
 
-```cpp id="g3pn7x"
+### 🚗 Kendaraan
+| Fungsi | Pin |
+|--------|-----|
+| Merah  | 4   |
+| Kuning | 5   |
+| Hijau  | 6   |
+
+### 🚶 Pedestrian Kanan
+| Fungsi | Pin |
+|--------|-----|
+| Merah  | 7   |
+| Hijau  | 8   |
+
+### 🚶 Pedestrian Kiri
+| Fungsi | Pin |
+|--------|-----|
+| Merah  | 9   |
+| Hijau  | 10  |
+
+### 🔘 Tombol
+| Tombol | Pin |
+|--------|-----|
+| Kiri   | 2   |
+| Kanan  | 3   |
+
+---
+
+## Cuplikan Program
+
+```cpp
 void loop() {
-  aktifkanSimpang(merahU, kuningU, hijauU);
-  aktifkanSimpang(merahT, kuningT, hijauT);
-  aktifkanSimpang(merahS, kuningS, hijauS);
-  aktifkanSimpang(merahB, kuningB, hijauB);
+
+  // kondisi normal
+  if (!ditekan) {
+    digitalWrite(hijau, HIGH);
+    digitalWrite(kuning, LOW);
+    digitalWrite(merah, LOW);
+  }
+
+  // saat tombol ditekan
+  if (ditekan) {
+    digitalWrite(hijau, LOW);
+    digitalWrite(merah, HIGH);
+  }
 }
-```
-
-Program dibuat menggunakan fungsi supaya lebih rapi, salah satunya:
-
-* `semuaMerah()` → memastikan semua lampu merah dulu
-* `aktifkanSimpang()` → mengatur satu arah aktif
 
 ---
 
-## 📸 Hasil Simulasi
+Program menggunakan interrupt agar sistem dapat merespons tombol secara langsung tanpa menunggu proses loop selesai.
 
-![alt text](<Tugas 3_Rafif Surya Murtadha1.png>)
+---
+
+## Hasil Simulasi
+
+dokumentasi/Tugas 4_Rafif Surya Murtadha1.png
 
 ---
 
 ## 🔗 Link Project
 
-* Tinkercad:
-  https://www.tinkercad.com/things/36z2knNnZpV-tugas-3rafif-surya-murtadha
+- Tinkercad:  
+  https://www.tinkercad.com/things/1dX3K8bUF2G-pedestrian-traficlight-rafifsuryah1d023008  
 
-* Dokumentasi:
-  https://drive.google.com/drive/folders/1pgOwei679Aq-AYLNUxDXzfmd8ulX9Ro_?usp=sharing
+- Dokumentasi:  
+  https://drive.google.com/file/d/1LGKNe9Rngz_CcnvVkwCSc7eZHSg8BGzg/view?usp=sharing 
+
+---
+
+##  Hasil
+
+Berdasarkan hasil pengujian:
+
+- Sistem berjalan sesuai dengan logika yang dirancang  
+- Interrupt berhasil merespons tombol dengan cepat  
+- Tidak terjadi konflik antara kendaraan dan pedestrian  
+- Transisi lampu berjalan dengan baik  
+- Sistem masih menggunakan `delay()` sehingga belum optimal  
 
 ---
 
 
-## 📊 Hasil
+## Nama / NIM
 
-Dari hasil pengujian:
-
-* Lampu sudah berjalan sesuai urutan
-* Tidak ada konflik antar arah
-* Timing sesuai dengan yang direncanakan
-* Sistem berjalan terus (looping)
-* Masih pakai `delay()` (belum optimal)
-
----
-
-
-
-Rafif Surya Murtadha
+Rafif Surya Murtadha  
 H1D023008
-
----
